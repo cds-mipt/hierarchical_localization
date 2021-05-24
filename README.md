@@ -15,8 +15,9 @@ With `hloc`, you can reproduce results of hloc on HPointLoc dataset
 ## Installation with Docker
 
 ```
+cd docker
 docker build -t hloc:latest .
-docker run -it --rm -p 8888:8888 hloc:latest  # for GPU support, add `--runtime=nvidia`
+bash start_and_into.sh <path_to_dataset>
 jupyter notebook --ip 0.0.0.0 --port 8888 --no-browser --allow-root
 ```
 
