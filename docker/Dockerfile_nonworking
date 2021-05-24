@@ -1,0 +1,76 @@
+FROM ubuntu:20.04
+
+ENV TZ=Europe/Kiev
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN apt-get update  \
+	&& apt-get install -y --no-install-recommends build-essential git curl ca-certificates\
+	libsparsehash-dev python3-dev libjpeg-dev libpng-dev python3-pip  \
+    qtbase5-dev qtdeclarative5-dev \
+    libsuitesparse-dev \
+    libqglviewer-dev-qt5 \
+    pkg-config \
+    cmake \
+    git \
+    tar \
+    wget \
+    libgoogle-glog-dev \
+    libatlas-base-dev \
+    libsuitesparse-dev \
+    libglew-dev \
+	&& rm -rf /var/lib/apt/lists/*
+
+
+# Eigen
+ARG EIGEN3_VERSION=3.3.7
+WORKDIR /tmp
+RUN set -x && \
+  wget -q https://gitlab.com/libeigen/eigen/-/archive/${EIGEN3_VERSION}/eigen-${EIGEN3_VERSION}.tar.bz2 && \
+  tar xf eigen-${EIGEN3_VERSION}.tar.bz2 && \
+  rm -rf eigen-${EIGEN3_VERSION}.tar.bz2 && \
+  cd eigen-${EIGEN3_VERSION} && \
+  mkdir -p build && \
+  cd build && \
+  cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} \
+    .. && \
+  make -j${NUM_THREADS} && \
+  make install && \
+  cd /tmp && \
+  rm -rf *
+ENV Eigen3_DIR=${CMAKE_INSTALL_PREFIX}/share/eigen3/cmake
+    
+RUN pip install --upgrade pip
+RUN pip install \
+    numpy \
+    opencv-python \
+    tqdm \
+    matplotlib \
+    scipy \
+    h5py \
+    jupyterlab notebook \
+    git
+    # PyOpenGL \
+    # PyOpenGL_accelerate
+# RUN pip     install PyOpenGL PyOpenGL_accelerate
+RUN mkdir -p /home
+# RUN apt-get update && \
+#     apt-get install --no-install-recommends -y \
+#     git
+WORKDIR /home
+# RUN pip3 install git+https://github.com/mihaidusmanu/pycolmap
+
+# Installing CMake
+RUN apt-get -y install cmake
+
+# Installing g2o python
+# WORKDIR /home
+# RUN git clone https://github.com/uoip/g2opy.git
+# WORKDIR /home/g2opy
+# RUN mkdir build
+# WORKDIR /home/g2opy/build
+# RUN cmake -DPYBIND11_PYTHON_VERSION=3.8 ..
+# RUN make -j8
+# WORKDIR /home/g2opy
+# RUN python3 setup.py install
