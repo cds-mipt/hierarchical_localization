@@ -10,17 +10,7 @@ git clone https://github.com/cds-mipt/hierarchical_localization.git --recurse-su
 
 This is `hloc`, a modular toolbox for state-of-the-art 6-DoF visual localization. It implements [Hierarchical Localization](https://arxiv.org/abs/1812.03506), leveraging image retrieval and feature matching, and is fast, accurate, and scalable. This codebase won the indoor/outdoor [localization challenge at CVPR 2020](https://sites.google.com/view/vislocslamcvpr2020/home), in combination with [SuperGlue](https://psarlin.com/superglue/), our graph neural network for feature matching.
 
-With `hloc`, you can:
-
-- Reproduce [our CVPR 2020 winning results](https://www.visuallocalization.net/workshop/cvpr/2020/) on outdoor (Aachen) and indoor (InLoc) datasets
-- Run Structure-from-Motion with SuperPoint+SuperGlue to localize with your own datasets
-- Evaluate your own local features or image retrieval for visual localization
-- Implement new localization pipelines and debug them easily 🔥
-
-<p align="center">
-  <a href="https://arxiv.org/abs/1812.03506"><img src="doc/hloc.png" width="60%"/></a>
-  <br /><em>Hierachical Localization uses both image retrieval and feature matching</em>
-</p>
+With `hloc`, you can reproduce results of hloc on HPointLoc dataset
 
 ##
 
@@ -53,33 +43,21 @@ The localization can then be evaluated on [visuallocalization.net](https://www.v
 
 Strcture of the toolbox:
 
-- `hloc/*.py` : top-level scripts
+- `hloc/*.ipynb` : top-level scripts
 - `hloc/extractors/` : interfaces for feature extractors
 - `hloc/matchers/` : interfaces for feature matchers
 
 ## Tasks
 
-We provide step-by-step guides to localize with Aachen, InLoc, and to generate reference poses for your own data using SfM. Just download the datasets and you're reading to go!
-
-### Aachen – outdoor localization
-
-Have a look at [`pipeline_Aachen.ipynb`](https://nbviewer.jupyter.org/github/cvg/Hierarchical-Localization/blob/master/pipeline_Aachen.ipynb) for a step-by-step guide on localizing with Aachen. Play with the visualization, try new local features or matcher, and have fun! Don't like notebooks? You can also run all scripts from the command line.
-
-<p align="center">
-  <a href="https://nbviewer.jupyter.org/github/cvg/Hierarchical-Localization/blob/master/pipeline_Aachen.ipynb"><img src="doc/loc_aachen.svg" width="70%"/></a>
-</p>
+We provide step-by-step guides to localize HPointLoc.
 
 ### InLoc – indoor localization
 
-The notebook [`pipeline_InLoc.ipynb`](https://nbviewer.jupyter.org/github/cvg/Hierarchical-Localization/blob/master/pipeline_InLoc.ipynb) shows the steps for localizing with InLoc. It's much simpler since a 3D SfM model is not needed.
+The notebook [`pipeline_Habitat.ipynb`](https://nbviewer.jupyter.org/github/cvg/cds-mipt/hierarchical_localization/blob/main/pipeline_Habitat.ipynb) how to run localization and get metrics on HPointLoc dataset.
 
 <p align="center">
-  <a href="https://nbviewer.jupyter.org/github/cvg/Hierarchical-Localization/blob/master/pipeline_InLoc.ipynb"><img src="doc/loc_inloc.svg" width="70%"/></a>
+  <a href="https://nbviewer.jupyter.org/github/cds-mipt/hierarchical_localization/blob/main/pipeline_Habitat.ipynb"><img width="70%"/></a>
 </p>
-
-### SfM reconstruction from scratch
-
-We show in [`pipeline_SfM.ipynb`](https://nbviewer.jupyter.org/github/cvg/Hierarchical-Localization/blob/master/pipeline_SfM.ipynb) how to run 3D reconstruction for an unordered set of images. This generates reference poses, and a nice sparse 3D model suitable for localization with the same pipeline as Aachen.
 
 ## BibTex Citation
 
