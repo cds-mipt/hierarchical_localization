@@ -6,9 +6,7 @@
 
 git clone https://github.com/cds-mipt/hierarchical_localization.git --recurse-submodules
 
-[Google doc](https://docs.google.com/document/d/1-XJtUBoMRR9-k_bm_41uVAezRGeQiOKCvSK3t2bo1e4/edit?usp=sharing) с кратким описанием работы Hierarchical localization.
-
-This is `hloc`, a modular toolbox for state-of-the-art 6-DoF visual localization. It implements [Hierarchical Localization](https://arxiv.org/abs/1812.03506), leveraging image retrieval and feature matching, and is fast, accurate, and scalable. This codebase won the indoor/outdoor [localization challenge at CVPR 2020](https://sites.google.com/view/vislocslamcvpr2020/home), in combination with [SuperGlue](https://psarlin.com/superglue/), our graph neural network for feature matching.
+This is `hloc`, a modular toolbox for state-of-the-art 6-DoF visual localization. It implements [Hierarchical Localization](https://arxiv.org/abs/1812.03506), leveraging image retrieval and feature matching, and is fast, accurate, and scalable.
 
 With `hloc`, you can reproduce results of hloc on HPointLoc dataset
 
@@ -86,20 +84,6 @@ If you report any of the above results in a publication, or use any of the tools
 ```
 
 ## Going further
-
-### Debugging and Visualization
-
-<details>
-<summary>[Click to expand]</summary>
-
-Each localization run generates a pickle log file. For each query, it contains the selected database images, their matches, and information from the pose solver, such as RANSAC inliers. It can thus be parsed to gather statistics and analyze failure modes or difficult scenarios. 
-
-We also provide some visualization tools in [`hloc/visualization.py`](./hloc/visualization.py) to visualize some attributes of the 3D SfM model, such as visibility of the keypoints, their track length, or estimated sparse depth (like below).
-
-<p align="center">
-  <a href="./pipeline_Aachen.ipynb"><img src="doc/depth_aachen.svg" width="60%"/></a>
-</p>
-</details>
 
 ### Using your own local features or matcher
 
