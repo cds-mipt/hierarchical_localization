@@ -1,0 +1,9 @@
+[submodule "SuperGluePretrainedNetwork"]
+	path = SuperGluePretrainedNetwork
+	url = https://github.com/Skydes/SuperGluePretrainedNetwork.git
+[submodule "third_party/d2-net"]
+	path = third_party/d2-net
+	url = https://github.com/mihaidusmanu/d2-net.git
+[submodule "g2opy"]
+	path = g2opy
+	url = https://github.com/uoip/g2opy.git
