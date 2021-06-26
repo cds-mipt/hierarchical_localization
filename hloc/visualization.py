@@ -31,6 +31,7 @@ def read_image(path):
     path = directory + '/' +  filename
     path = Path(path)
     assert path.exists(), path
+    print(str(path))
     image = cv2.imread(str(path))
     if len(image.shape) == 3:
         image = image[:, :, ::-1]
@@ -210,14 +211,14 @@ def visualize_loc(results, image_dir, sfm_model=None, top_k_db=2,
             num = num + 1
             break
                 
-def visualize_matches(feature_filename, match_filename, image_dir, image_filename_1, image_filename_2, dpi=300):
+def visualize_matches(feature_filename, matches, image_dir, image_filename_1, image_filename_2, dpi=300):
     
     image_1 = read_image(image_filename_1)
     image_2 = read_image(image_filename_2)
     plot_images([image_1, image_2], dpi=dpi)
     
     feature_file = h5py.File(str(feature_filename), 'r')
-    match_file = h5py.File(str(match_filename), 'r')
+#     match_file = h5py.File(str(match_filename), 'r')
 #     print(len(match_file['1LXtFkjw3qL_point1-around_0000.png_1LXtFkjw3qL_point1-base_0000.png']['matching_scores0'].__array__()))
 #     print(match_file['1LXtFkjw3qL_point1-around_0000.png_1LXtFkjw3qL_point1-base_0000.png']['matches0'].__array__())
     
@@ -228,8 +229,12 @@ def visualize_matches(feature_filename, match_filename, image_dir, image_filenam
 #     keypoints_image_2 = feature_file[str(names_in_filename_rel_to_dir[0])][str(names_in_filename_rel_to_dir[1])]['keypoints'].__array__()
     keypoints_image_2 = feature_file[str(names_in_filename_rel_to_dir[0]).rstrip('.png')]['keypoints'].__array__()
     
-    pair = names_to_pair(str(Path(image_filename_1).relative_to(image_dir)).rstrip('.png'), str(Path(image_filename_2).relative_to(image_dir)).rstrip('.png'))
-    m = match_file[pair]['matches0'].__array__()
+    print(len(keypoints_image_1))
+    print(len(keypoints_image_2))
+    
+#     pair = names_to_pair(str(Path(image_filename_1).relative_to(image_dir)).rstrip('.png'), str(Path(image_filename_2).relative_to(image_dir)).rstrip('.png'))
+#     m = match_file[pair]['matches0'].__array__()
+    m = matches 
     v = (m > -1)
     matched_keypoints_image_1, matched_keypoints_image_2 = keypoints_image_1[v], keypoints_image_2[m[v]]
     

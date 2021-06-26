@@ -78,14 +78,14 @@ def main(conf, pairs, features, export_dir, exhaustive=False):
         os.remove(match_path)
     match_file = h5py.File(str(match_path), 'a')
 
-    i = 0
     matched = set()
     for pair in tqdm(pair_list, smoothing=.1):
-        name0, name1 = pair.split(' ')
+        if pair.find('#') != -1:
+            continue
+        name0, name1 = pair.split(' ')[:2]
+        name0 = name0.rstrip('.png')
+        name1 = name1.rstrip('.png')
         pair = names_to_pair(name0, name1)
-        if i == 42:
-            print(pair)
-        i += 1
 
         # Avoid to recompute duplicates to save time
         if len({(name0, name1), (name1, name0)} & matched) \
@@ -93,11 +93,6 @@ def main(conf, pairs, features, export_dir, exhaustive=False):
             continue
 
         data = {}
-#         print(feature_file.keys())
-#         print('name0')
-#         print(name0)
-#         print('name1')
-#         print(name1)
         feats0, feats1 = feature_file[name0], feature_file[name1]
         for k in feats1.keys():
             data[k+'0'] = feats0[k].__array__()
@@ -114,8 +109,6 @@ def main(conf, pairs, features, export_dir, exhaustive=False):
         grp = match_file.create_group(pair)
         matches = pred['matches0'][0].cpu().short().numpy()
         grp.create_dataset('matches0', data=matches)
-        if pair == '1LXtFkjw3qL_point0_database_0001_1LXtFkjw3qL_point0_database_0000':
-            print('Yes')
         if 'matching_scores0' in pred:
             scores = pred['matching_scores0'][0].cpu().half().numpy()
             grp.create_dataset('matching_scores0', data=scores)

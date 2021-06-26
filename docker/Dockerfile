@@ -2,17 +2,19 @@ FROM colmap/colmap:latest
 RUN apt-get update -y
 RUN apt-get install python3 python3-pip unzip wget -y
 RUN pip3 install --upgrade pip
-RUN pip3 install torch
-RUN pip3 install numpy
-RUN pip3 install opencv-python
-RUN pip3 install tqdm
-RUN pip3 install matplotlib
-RUN pip3 install scipy
-RUN pip3 install h5py
-RUN pip3 install jupyterlab notebook
+RUN pip3 install torch \
+                 numpy \
+                 opencv-python \
+                 tqdm \
+                 matplotlib \
+                 scipy \
+                 h5py \
+                 jupyterlab notebook
+RUN pip3 install -U scikit-learn
 RUN mkdir -p /home
 WORKDIR /home
 RUN pip3 install git+https://github.com/mihaidusmanu/pycolmap
+RUN pip install faiss-gpu
 
 # Installing g2o python
 WORKDIR /home

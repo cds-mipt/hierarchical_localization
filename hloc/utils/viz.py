@@ -59,6 +59,7 @@ def plot_keypoints(kpts, colors='lime', ps=4):
         colors: string, or list of list of tuples (one for each keypoints).
         ps: size of the keypoints as float.
     """
+    print(len(kpts))
     if not isinstance(colors, list):
         colors = [colors] * len(kpts)
     axes = plt.gcf().axes
@@ -82,6 +83,8 @@ def plot_matches(kpts0, kpts1, color=None, lw=1.5, ps=4, indices=(0, 1), a=1.):
     ax0, ax1 = ax[indices[0]], ax[indices[1]]
     fig.canvas.draw()
 
+    print(len(kpts0))
+    print(len(kpts1))
     assert len(kpts0) == len(kpts1)
     if color is None:
         color = matplotlib.cm.hsv(np.random.rand(len(kpts0))).tolist()

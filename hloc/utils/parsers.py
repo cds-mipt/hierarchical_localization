@@ -29,8 +29,23 @@ def parse_retrieval(path):
     retrieval = defaultdict(list)
     with open(path, 'r') as f:
         for p in f.read().rstrip('\n').split('\n'):
-            q, r = p.split(' ')
-            retrieval[q].append(r)
+            if p.find('#') != -1:
+                continue
+            if len(p.split(' ')) == 2:
+                q, r = p.split(' ')
+                retrieval[q.rstrip('.png')].append({
+                    r.rstrip('.png') : 1.0
+                })
+            elif len(p.split(' ')) == 3:
+                q, r, score = p.split(' ')
+                retrieval[q.rstrip('.png')].append({
+                    r.rstrip('.png') : score
+                })
+            elif len(p.split(' ')) == 4:
+                q, r, L2_metric, score = p.split(' ')
+                retrieval[q.rstrip('.png')].append({
+                    r.rstrip('.png') : score
+                })
     return retrieval
 
 

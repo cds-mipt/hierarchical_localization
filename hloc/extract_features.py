@@ -176,7 +176,7 @@ def main(conf, image_dir, export_dir, as_half=False):
                 if (dt == np.float32) and (dt != np.float16):
                     pred[k] = pred[k].astype(np.float16)
 #         print(data['name'][0].split('/')[-1][:-4])
-        group_name = data['name'][0].split('/')[-1][:-4]
+        group_name = data['name'][0].split('/')[-1].rstrip('.png')
         grp = feature_file.create_group(group_name)
         for k, v in pred.items():
             grp.create_dataset(k, data=v)
