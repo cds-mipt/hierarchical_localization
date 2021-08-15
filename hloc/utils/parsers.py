@@ -31,6 +31,13 @@ def parse_retrieval(path):
         for p in f.read().rstrip('\n').split('\n'):
             if p.find('#') != -1:
                 continue
+#             if len(p.split(',')) == 3:
+#             q, r, score = p.split(',')
+#             q = q.lstrip('testing/')
+#             r = r.lstrip('training/')
+#             retrieval[q.rstrip('.png')].append({
+#                 r.rstrip('.png') : 1.0
+#             })
             if len(p.split(' ')) == 2:
                 q, r = p.split(' ')
                 retrieval[q.rstrip('.png')].append({

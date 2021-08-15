@@ -6,6 +6,8 @@ import h5py
 import logging
 from tqdm import tqdm
 import pprint
+import time
+import numpy as np
 
 from . import matchers
 from .utils.base_model import dynamic_load
@@ -79,12 +81,15 @@ def main(conf, pairs, features, export_dir, exhaustive=False):
     match_file = h5py.File(str(match_path), 'a')
 
     matched = set()
-    for pair in tqdm(pair_list, smoothing=.1):
+    inference_times = []
+    for num_pair, pair in enumerate(tqdm(pair_list, smoothing=.1)):
         if pair.find('#') != -1:
             continue
-        name0, name1 = pair.split(' ')[:2]
+        name0, name1 = pair.split(',')[:2]
         name0 = name0.rstrip('.png')
         name1 = name1.rstrip('.png')
+        name0 = name0.lstrip('testing/')
+        name1 = name1.lstrip('training/')
         pair = names_to_pair(name0, name1)
 
         # Avoid to recompute duplicates to save time
@@ -104,8 +109,14 @@ def main(conf, pairs, features, export_dir, exhaustive=False):
         # some matchers might expect an image but only use its size
         data['image0'] = torch.empty((1, 1,)+tuple(feats0['image_size'])[::-1])
         data['image1'] = torch.empty((1, 1,)+tuple(feats1['image_size'])[::-1])
-
-        pred = model(data)
+        with torch.no_grad():
+            torch.cuda.synchronize()
+            start_time = time.perf_counter()
+            pred = model(data)
+            torch.cuda.synchronize()
+            inference_time = time.perf_counter() - start_time
+        if num_pair != 0:
+            inference_times.append(inference_time)
         grp = match_file.create_group(pair)
         matches = pred['matches0'][0].cpu().short().numpy()
         grp.create_dataset('matches0', data=matches)
@@ -117,6 +128,10 @@ def main(conf, pairs, features, export_dir, exhaustive=False):
 
     match_file.close()
     logging.info('Finished exporting matches.')
+    mean = round(np.mean(inference_times), 5)
+    median = round(np.median(inference_times), 5)
+    print("Среднее время рабоыы SuperGlue: {}".format(mean))
+    print("Медианное время рабоыы SuperGlue: {}".format(median))
 
 
 if __name__ == '__main__':

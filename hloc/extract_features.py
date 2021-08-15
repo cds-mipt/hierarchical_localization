@@ -8,6 +8,7 @@ import cv2
 import numpy as np
 from tqdm import tqdm
 import pprint
+import time
 
 from . import extractors
 from .utils.base_model import dynamic_load
@@ -158,10 +159,18 @@ def main(conf, image_dir, export_dir, as_half=False):
 #     feature_path.parent.mkdir(exist_ok=True, parents=True)
 #     print(feature_path)
     feature_file = h5py.File(str(feature_path), 'w')
-    feature_file = h5py.File(str(feature_path), 'a')
+#     feature_file = h5py.File(str(feature_path), 'a')
 
-    for data in tqdm(loader):
-        pred = model(map_tensor(data, lambda x: x.to(device)))
+    inference_times = []
+    for num_data, data in enumerate(tqdm(loader)):
+        with torch.no_grad():
+            torch.cuda.synchronize()
+            start_time = time.perf_counter()
+            pred = model(map_tensor(data, lambda x: x.to(device)))
+            torch.cuda.synchronize()
+            inference_time = time.perf_counter() - start_time
+        if num_data != 0:
+            inference_times.append(inference_time)
         pred = {k: v[0].cpu().numpy() for k, v in pred.items()}
 
         pred['image_size'] = original_size = data['original_size'][0].numpy()
@@ -184,7 +193,10 @@ def main(conf, image_dir, export_dir, as_half=False):
         del pred
     feature_file.close()
     logging.info('Finished exporting features.')
-
+    mean = round(np.mean(inference_times), 5)
+    median = round(np.median(inference_times), 5)
+    print("Среднее время рабоыы SuperPoint: {}".format(mean))
+    print("Медианное время рабоыы SuperPoint: {}".format(median))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
